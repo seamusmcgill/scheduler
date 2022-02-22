@@ -10,6 +10,8 @@ import DayListItem from "components/DayListItem";
 import DayList from "components/DayList";
 import InterviewerListItem from "components/InterviewerListItem";
 import InterviewerList from "components/InterviewerList"
+import Appointment from "components/Appointment"
+import Header from "components/Appointment/Header"
 
 storiesOf("Button", module)
   .addParameters({
@@ -112,24 +114,39 @@ storiesOf("InterviewerListItem", module)
     { id: 5, name: "Sven Jones", avatar: "https://i.imgur.com/twYrpay.jpg" }
   ];
   
-  storiesOf("InterviewerList", module)
-    .addParameters({
-      backgrounds: [{ name: "dark", value: "#222f3e", default: true }]
-    })
-    .add("Initial", () => (
-      <InterviewerList
-        interviewers={interviewers}
+storiesOf("InterviewerList", module)
+  .addParameters({
+    backgrounds: [{ name: "dark", value: "#222f3e", default: true }]
+  })
+  .add("Initial", () => (
+    <InterviewerList
+      interviewers={interviewers}
+    />
+  ))
+  .add("Selected", () => (
+    <InterviewerList
+      interviewers={interviewers}
+      value={3}
+    />
+  ))
+  .add("Clickable", () => (
+    <InterviewerList
+      interviewers={interviewers}
+      onChange={action("setInterviewer")}
+    />
+  ));
+
+storiesOf("Appointment", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true}]
+  })
+  .add("Appointment", () => <Appointment /> )
+  .add("Appointment with Time", () => (
+    <Appointment 
+      time="12pm"
       />
-    ))
-    .add("Selected", () => (
-      <InterviewerList
-        interviewers={interviewers}
-        value={3}
-      />
-    ))
-    .add("Clickable", () => (
-      <InterviewerList
-        interviewers={interviewers}
-        onChange={action("setInterviewer")}
-      />
-    ));
+  ))
+  .add("Header", () => <Header 
+      time="12pm"
+    />
+  )
