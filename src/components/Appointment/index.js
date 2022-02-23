@@ -6,7 +6,7 @@ import Empty from './Empty';
 
 export default function Appointment(props) {
 
-  const { interview, time } = props
+  const { id, time, interview } = props
   return (
     <article className="appointment">
       <Header 
