@@ -11,13 +11,17 @@ export default function Application(props) {
     appointments: {}
   })
 
-export default function Application(props) {
-  const [ day, setDay ] = useState('Monday')
-  const [ days, setDays ] = useState([])
+  const setDay = day => setState({...state, day})
 
   useEffect(() => {
-    axios.get('/api/days')
-      .then(response => setDays(response.data))
+
+    Promise.all([
+      axios.get('/api/days'),
+      axios.get('/api/appointments')
+    ]).then((all) => {
+      setState(prev => ({...prev, days: all[0].data, appointments: all[1].data})
+    )
+    })
   }, [])
 
   return (
