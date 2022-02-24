@@ -20,3 +20,17 @@ export function getInterview(state, interview) {
   let appointmentInterviewer = state.interviewers[interviewerID]
   return {...interview, interviewer: appointmentInterviewer}
 }
+
+export function getInterviewersForDay(state, day) {
+  // Initialize dayInterviewers array
+  const dayInterviewers = []
+  // Find correct day object in state
+  const dayObject = state.days.find(element => element.name === day)
+  // If day not found return empty array
+  if (!dayObject) return dayInterviewers
+  // For each interviewer in day object push matching state interviewer object into dayInterviewers
+  dayObject.interviewers.forEach(interviewer => {
+    dayInterviewers.push(state.interviewers[interviewer])
+  })
+  return dayInterviewers
+}
