@@ -31,7 +31,19 @@ export default function Application(props) {
   }, [])
 
   function bookInterview(id, interview) {
-    console.log(id, interview);
+    // Create new appointments object with new interview added 
+    const appointment = {
+      ...state.appointments[id],
+      interview: { ...interview }
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    // Insert new interview into db and update state with new appointments object
+    axios.put(`/api/appointments/${id}`, {interview: {...interview}})
+      .then(setState({...state, appointments}))
+    
   }
 
   return (
