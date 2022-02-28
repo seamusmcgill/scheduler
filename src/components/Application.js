@@ -42,8 +42,23 @@ export default function Application(props) {
     };
     // Insert new interview into db and update state with new appointments object
     return axios.put(`/api/appointments/${id}`, {interview: {...interview}})
-      .then(setState({...state, appointments}))
+      .then(() => setState({...state, appointments}))
     
+  }
+
+  function cancelInterview(id) {
+    // Create new appointments object with interview canceled for selected appointment
+    const appointment = {
+      ...state.appointments[id],
+      interview: null
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    // Insert new interview into db and update state with new appointments object
+    return axios.delete(`/api/appointments/${id}`)
+      .then(() => setState({...state, appointments}))
   }
 
   return (
@@ -78,6 +93,7 @@ export default function Application(props) {
             interview={interview}
             interviewers={dailyInterviewers}
             bookInterview={bookInterview}
+            cancelInterview={cancelInterview}
          />
         })}
         <Appointment key="last" time="5pm" />
