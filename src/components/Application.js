@@ -41,7 +41,7 @@ export default function Application(props) {
       [id]: appointment
     };
     // Insert new interview into db and update state with new appointments object
-    axios.put(`/api/appointments/${id}`, {interview: {...interview}})
+    return axios.put(`/api/appointments/${id}`, {interview: {...interview}})
       .then(setState({...state, appointments}))
     
   }
