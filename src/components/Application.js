@@ -30,6 +30,10 @@ export default function Application(props) {
     })
   }, [])
 
+  function bookInterview(id, interview) {
+    console.log(id, interview);
+  }
+
   return (
     <main className="layout">
       <section className="sidebar">
@@ -61,6 +65,7 @@ export default function Application(props) {
             time={appointment.time}
             interview={interview}
             interviewers={dailyInterviewers}
+            bookInterview={bookInterview}
          />
         })}
         <Appointment key="last" time="5pm" />
