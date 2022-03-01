@@ -23,13 +23,13 @@ export default function useApplicationData() {
     })
   }, [])
 
-  function updateSpots(add) {
+  function updateSpots(action) {
     // Find index of current day in days array
     const dayIndex = state.days.findIndex(day => day.name === state.day)
     // Create copy of days array 
     const daysCopy = [...state.days];
     // Update spots at index 
-    if (add) {
+    if (action === 'booking') {
       daysCopy[dayIndex].spots--
     } else {
       daysCopy[dayIndex].spots++
@@ -38,6 +38,8 @@ export default function useApplicationData() {
   }
 
   function bookInterview(id, interview) {
+    // Check if the booking is being made or just edited 
+    const isEdit = state.appointments[id].interview ? true : false;
     // Create new appointments object with new interview added 
     const appointment = {
       ...state.appointments[id],
@@ -49,7 +51,12 @@ export default function useApplicationData() {
     };
     // Insert new interview into db and update state with new appointments object
     return axios.put(`/api/appointments/${id}`, {interview: {...interview}})
-      .then(() => setState({...state, appointments, days: updateSpots(true)}))
+      .then(() => { 
+        if (isEdit) {
+          return setState({...state, appointments})
+        }
+        return setState({...state, appointments, days: updateSpots('booking')})
+      });
   }
 
   function cancelInterview(id) {
