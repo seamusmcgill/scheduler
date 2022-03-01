@@ -23,17 +23,21 @@ export default function useApplicationData() {
     })
   }, [])
 
-  function updateSpots(action) {
+  function updateSpots(appointments, id) {
     // Find index of current day in days array
-    const dayIndex = state.days.findIndex(day => day.name === state.day)
-    // Create copy of days array 
-    const daysCopy = [...state.days];
-    // Update spots at index 
-    if (action === 'booking') {
-      daysCopy[dayIndex].spots--
+    const dayIndex = state.days.findIndex(day => day.name === state.day);
+    // Create copy of days array
+    let daysCopy = [...state.days];
+    // Create copy of day you want to update
+    const dayCopy = { ...state.days[dayIndex] };
+    // Update spots at index in day copy depending on if appointment exists
+    if (appointments[id].interview) {
+      dayCopy.spots--;
     } else {
-      daysCopy[dayIndex].spots++
+      dayCopy.spots++;
     }
+    // Update copy of days and return
+    daysCopy[dayIndex] = dayCopy;
     return daysCopy;
   }
 
@@ -55,7 +59,7 @@ export default function useApplicationData() {
         if (isEdit) {
           return setState({...state, appointments})
         }
-        return setState({...state, appointments, days: updateSpots('booking')})
+        return setState({...state, appointments, days: updateSpots(appointments, id)})
       });
   }
 
@@ -72,7 +76,7 @@ export default function useApplicationData() {
     };
     // Insert new interview into db and update state with new appointments object
     return axios.delete(`/api/appointments/${id}`)
-      .then(() => setState({...state, appointments, days: updateSpots()}))
+      .then(() => setState({...state, appointments, days: updateSpots(appointments, id)}))
   }
 
   return {
