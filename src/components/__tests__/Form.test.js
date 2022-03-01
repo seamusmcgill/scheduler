@@ -63,4 +63,20 @@ describe("Form", () => {
     /* 5. onSave is called with the correct arguments */
     expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", null);
   });
+
+  it("submits the name entered by the user", () => {
+    // onSave is created as mock function
+    const onSave = jest.fn()
+    // Form is rendered with student name blank
+    const { getByTestId, getByText } = render(<Form interviewers={interviewers} onSave={onSave}/>)
+    // Fill in student name with fireEvent change event
+    fireEvent.change(getByTestId("student-name-input"), {target: {value: "Lydia Miller-Jones"}})
+    // Fire click event on save button
+    fireEvent.click(getByText("Save"))
+    /* onSave is called once*/
+    expect(onSave).toHaveBeenCalledTimes(1);
+  
+    /* onSave is called with the correct arguments */
+    expect(onSave).toHaveBeenCalledWith("Lydia Miller-Jones", null);
+  })
 });
