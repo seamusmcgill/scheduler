@@ -1,31 +1,38 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios'
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function useApplicationData() {
-  const [ state,  setState ] = useState({
+  // Declare state variables
+  const [state, setState] = useState({
     day: "Monday",
     days: [],
     appointments: {},
-    interviewers: {}
-  })
+    interviewers: {},
+  });
 
-  const setDay = day => setState({...state, day})
+  // Logic to update the day in state
+  const setDay = (day) => setState({ ...state, day });
 
+  // Make axios requests to set the state object
   useEffect(() => {
-
     Promise.all([
-      axios.get('/api/days'),
-      axios.get('/api/appointments'),
-      axios.get('/api/interviewers')
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers"),
     ]).then((all) => {
-      setState(prev => ({...prev, days: all[0].data, appointments: all[1].data, interviewers: all[2].data})
-    )
-    })
-  }, [])
+      setState((prev) => ({
+        ...prev,
+        days: all[0].data,
+        appointments: all[1].data,
+        interviewers: all[2].data,
+      }));
+    });
+  }, []);
 
+  // To live update the spots in the dayList
   function updateSpots(appointments, id) {
     // Find index of current day in days array
-    const dayIndex = state.days.findIndex(day => day.name === state.day);
+    const dayIndex = state.days.findIndex((day) => day.name === state.day);
     // Create copy of days array
     let daysCopy = [...state.days];
     // Create copy of day you want to update
@@ -42,47 +49,59 @@ export default function useApplicationData() {
   }
 
   function bookInterview(id, interview) {
-    // Check if the booking is being made or just edited 
+    // Check if the booking is being made or just edited
     const isEdit = state.appointments[id].interview ? true : false;
-    // Create new appointments object with new interview added 
+    // Create new appointments object with new interview added
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview }
+      interview: { ...interview },
     };
     const appointments = {
       ...state.appointments,
-      [id]: appointment
+      [id]: appointment,
     };
     // Insert new interview into db and update state with new appointments object
-    return axios.put(`/api/appointments/${id}`, {interview: {...interview}})
-      .then(() => { 
+    return axios
+      .put(`/api/appointments/${id}`, { interview: { ...interview } })
+      .then(() => {
         if (isEdit) {
-          return setState(prev => ({...prev, appointments}))
+          return setState((prev) => ({ ...prev, appointments }));
         }
-        return setState(prev => ({...prev, appointments, days: updateSpots(appointments, id)}))
+        // Update days in state only if this is a new appointment being made
+        return setState((prev) => ({
+          ...prev,
+          appointments,
+          days: updateSpots(appointments, id),
+        }));
       });
   }
 
   function cancelInterview(id) {
-
     // Create new appointments object with interview canceled for selected appointment
     const appointment = {
       ...state.appointments[id],
-      interview: null
+      interview: null,
     };
     const appointments = {
       ...state.appointments,
-      [id]: appointment
+      [id]: appointment,
     };
-    // Insert new interview into db and update state with new appointments object
-    return axios.delete(`/api/appointments/${id}`)
-      .then(() => setState(prev => ({...prev, appointments, days: updateSpots(appointments, id)})))
+    // Insert new interview into db and update state with new appointments and days objects
+    return axios
+      .delete(`/api/appointments/${id}`)
+      .then(() =>
+        setState((prev) => ({
+          ...prev,
+          appointments,
+          days: updateSpots(appointments, id),
+        }))
+      );
   }
 
   return {
     state,
     setDay,
     bookInterview,
-    cancelInterview
-  }
+    cancelInterview,
+  };
 }

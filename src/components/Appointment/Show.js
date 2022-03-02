@@ -1,9 +1,10 @@
-import React from 'react';
+import React from "react";
 
 export default function Show(props) {
+  // Destructure props
+  const { student, interviewer, onEdit, onDelete } = props;
 
-  const { student, interviewer, onEdit, onDelete } = props 
-
+  // Return component to show booked appointment
   return (
     <main className="appointment__card appointment__card--show">
       <section className="appointment__card-left">
@@ -30,5 +31,5 @@ export default function Show(props) {
         </section>
       </section>
     </main>
-  )
+  );
 }

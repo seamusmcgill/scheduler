@@ -2,31 +2,37 @@ import React from "react";
 import DayList from "./DayList";
 import "components/Application.scss";
 import Appointment from "./Appointment";
-import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "helpers/selectors";
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay,
+} from "helpers/selectors";
 import useApplicationData from "./hooks/useApplicationData";
 
-export default function Application(props) {
-  
-  const {
-    state,
-    setDay,
-    bookInterview,
-    cancelInterview
-  } = useApplicationData();
-  
+export default function Application() {
+  // Destructure items from custom hook
+  const { state, setDay, bookInterview, cancelInterview } =
+    useApplicationData();
+
+  // Get interviewers for day
   let dailyInterviewers = getInterviewersForDay(state, state.day);
-  let dailyAppointments = getAppointmentsForDay(state, state.day).map(appointment => {
-    const interview = getInterview(state, appointment.interview)
-    return <Appointment 
-      key={appointment.id}
-      id={appointment.id}
-      time={appointment.time}
-      interview={interview}
-      interviewers={dailyInterviewers}
-      bookInterview={bookInterview}
-      cancelInterview={cancelInterview}
-   />
-  });
+  // Get appointments for day and return them as an array of React components
+  let dailyAppointments = getAppointmentsForDay(state, state.day).map(
+    (appointment) => {
+      const interview = getInterview(state, appointment.interview);
+      return (
+        <Appointment
+          key={appointment.id}
+          id={appointment.id}
+          time={appointment.time}
+          interview={interview}
+          interviewers={dailyInterviewers}
+          bookInterview={bookInterview}
+          cancelInterview={cancelInterview}
+        />
+      );
+    }
+  );
 
   return (
     <main className="layout">
@@ -38,11 +44,7 @@ export default function Application(props) {
         />
         <hr className="sidebar__separator sidebar--centered" />
         <nav className="sidebar__menu">
-          <DayList
-            days={state.days}
-            value={state.day}
-            onChange={setDay}
-          />
+          <DayList days={state.days} value={state.day} onChange={setDay} />
         </nav>
         <img
           className="sidebar__lhl sidebar--centered"
