@@ -9,7 +9,7 @@ export default function Application(props) {
   
   const {
     state,
-    setDay,
+    // setDay,
     bookInterview,
     cancelInterview
   } = useApplicationData();
