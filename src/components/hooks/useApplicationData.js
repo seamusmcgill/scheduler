@@ -57,9 +57,9 @@ export default function useApplicationData() {
     return axios.put(`/api/appointments/${id}`, {interview: {...interview}})
       .then(() => { 
         if (isEdit) {
-          return setState({...state, appointments})
+          return setState(prev => ({...prev, appointments}))
         }
-        return setState({...state, appointments, days: updateSpots(appointments, id)})
+        return setState(prev => ({...prev, appointments, days: updateSpots(appointments, id)}))
       });
   }
 
@@ -76,7 +76,7 @@ export default function useApplicationData() {
     };
     // Insert new interview into db and update state with new appointments object
     return axios.delete(`/api/appointments/${id}`)
-      .then(() => setState({...state, appointments, days: updateSpots(appointments, id)}))
+      .then(() => setState(prev => ({...prev, appointments, days: updateSpots(appointments, id)})))
   }
 
   return {
