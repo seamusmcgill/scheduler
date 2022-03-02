@@ -5,12 +5,13 @@ export default function useVisualMode(initial) {
   const [history, setHistory] = useState([initial]);
 
   // Update the history when transitioning to a new view
-  const transition = (mode, replace = false) => {
+  const transition = (view, replace = false) => {
     if (replace) {
-      setHistory((prev) => [...prev.slice(0, -1), mode]);
+      setHistory((prev) => [...prev.slice(0, -1), view]);
     } else {
-      setHistory((prev) => [...prev, mode]);
+      setHistory((prev) => [...prev, view]);
     }
+    setMode(mode)
   };
 
   // Remove last element of history array when going back
