@@ -7,7 +7,7 @@ export default function Button(props) {
   // Destructure props
   const { confirm, danger, onClick, disabled } = props;
 
-  let buttonClass = classNames("button", {
+  const buttonClass = classNames("button", {
     "button--confirm": confirm,
     "button--danger": danger,
   });

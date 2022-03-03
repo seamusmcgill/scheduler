@@ -16,8 +16,8 @@ export function getInterview(state, interview) {
   // Return null if not passed an interview
   if (!interview) return null;
   // Find interviewer and insert interviewer object into returned interview object
-  let interviewerID = interview.interviewer;
-  let appointmentInterviewer = state.interviewers[interviewerID];
+  const interviewerID = interview.interviewer;
+  const appointmentInterviewer = state.interviewers[interviewerID];
   return { ...interview, interviewer: appointmentInterviewer };
 }
 

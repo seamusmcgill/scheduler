@@ -34,7 +34,7 @@ export default function useApplicationData() {
     // Find index of current day in days array
     const dayIndex = state.days.findIndex((day) => day.name === state.day);
     // Create copy of days array
-    let daysCopy = [...state.days];
+    const daysCopy = [...state.days];
     // Create copy of day you want to update
     const dayCopy = { ...state.days[dayIndex] };
     // Update spots at index in day copy depending on if appointment exists

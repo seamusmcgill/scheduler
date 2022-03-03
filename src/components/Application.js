@@ -15,9 +15,9 @@ export default function Application() {
     useApplicationData();
 
   // Get interviewers for day
-  let dailyInterviewers = getInterviewersForDay(state, state.day);
+  const dailyInterviewers = getInterviewersForDay(state, state.day);
   // Get appointments for day and return them as an array of React components
-  let dailyAppointments = getAppointmentsForDay(state, state.day).map(
+  const dailyAppointments = getAppointmentsForDay(state, state.day).map(
     (appointment) => {
       const interview = getInterview(state, appointment.interview);
       return (
