@@ -1,3 +1,34 @@
+import { useState, useEffect } from "react";
+import axios from "axios";
+
+export default function useApplicationData() {
+  // Declare state variables
+  const [state, setState] = useState({
+    day: "Monday",
+    days: [],
+    appointments: {},
+    interviewers: {},
+  });
+
+  // Logic to update the day in state
+  const setDay = (day) => setState(prev => ({ ...prev, day }));
+
+  // Make axios requests to set the state object
+  useEffect(() => {
+    Promise.all([
+      axios.get("/api/days"),
+      axios.get("/api/appointments"),
+      axios.get("/api/interviewers"),
+    ]).then((all) => {
+      setState((prev) => ({
+        ...prev,
+        days: all[0].data,
+        appointments: all[1].data,
+        interviewers: all[2].data,
+      }));
+    });
+  }, []);
+
   // To live update the spots in the dayList
   function updateSpots(state, appointments, id) {
     // Find index of current day in days array
@@ -65,3 +96,11 @@
         })
       );
   }
+
+  return {
+    state,
+    setDay,
+    bookInterview,
+    cancelInterview,
+  };
+}
